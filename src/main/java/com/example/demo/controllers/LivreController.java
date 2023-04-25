@@ -24,7 +24,7 @@ import com.example.demo.service.LivreService;
 
 @RestController
 @RequestMapping("/books")
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:3000")
 public class LivreController {
     @Autowired
     @Qualifier("bookService")

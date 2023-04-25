@@ -49,6 +49,8 @@ public class LivreService {
         existingBook.setLangue(book.getLangue());
         existingBook.setName(book.getName());
         existingBook.setPrix(book.getPrix());
+        existingBook.setImageDeCouverture(book.getImageDeCouverture());
+        existingBook.setNbCopie(book.getNbCopie());
         return livreRepository.save(existingBook);
     }
 

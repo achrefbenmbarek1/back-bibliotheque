@@ -20,34 +20,32 @@ public class SecurityConfig {
         .cors()
         .configurationSource(request -> {
           CorsConfiguration corsConfiguration = new CorsConfiguration();
-          corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000")); // Set allowed origin
-          corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE")); // Set allowed methods
-          corsConfiguration.setAllowedHeaders(Arrays.asList("*")); // Set allowed headers
-          corsConfiguration.setAllowCredentials(true); // Allow credentials (e.g., cookies) to be included in CORS
-                                                       // requests
+          corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:8080"));
+          corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+          corsConfiguration.setAllowedHeaders(Arrays.asList("*"));
+          corsConfiguration.setAllowCredentials(true);
+
           return corsConfiguration;
         })
         .and()
         .authorizeHttpRequests((requests) -> requests
             .requestMatchers(new AntPathRequestMatcher("/login"))
             .permitAll()
-            .requestMatchers(new AntPathRequestMatcher("/books/**"))
-            .permitAll()
-            .requestMatchers(new AntPathRequestMatcher("/images/**"))
-            .permitAll()
-            // .requestMatchers(new AntPathRequestMatcher("/images"))
+            // .requestMatchers(new AntPathRequestMatcher("/books/**"))
             // .permitAll()
-            // .requestMatchers(new AntPathRequestMatcher("/upload"))
+            // .requestMatchers(new AntPathRequestMatcher("/images/**"))
             // .permitAll()
             .anyRequest().authenticated())
         .csrf().disable()
-        .formLogin()
+        // .formLogin()
+        .httpBasic()
         .and()
-        .logout() 
-        .logoutUrl("/logout") 
-        .logoutSuccessUrl("/login") 
-        .invalidateHttpSession(true) 
-        .deleteCookies("JSESSIONID");
+        .logout()
+        .logoutUrl("/logout")
+        .logoutSuccessUrl("/login")
+        .invalidateHttpSession(true)
+        .deleteCookies("token");
+        // .deleteCookies("JSESSIONID");
     // .formLogin(form -> {
     // form.loginPage("/login")
     // .usernameParameter("username")
