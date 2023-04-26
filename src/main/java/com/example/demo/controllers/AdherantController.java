@@ -18,7 +18,7 @@ import com.example.demo.service.AdherantService;
 
 @RestController
 @RequestMapping("/Adherents")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin
 public class AdherantController {
 
 	@Autowired

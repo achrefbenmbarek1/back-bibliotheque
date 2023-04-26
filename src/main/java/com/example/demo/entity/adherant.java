@@ -22,7 +22,6 @@ public class adherant {
 	@GeneratedValue(strategy= GenerationType.AUTO)
 	private Integer idadherant;
 	
-	
 	@Column	
 	private String nom;
 	@Column 
