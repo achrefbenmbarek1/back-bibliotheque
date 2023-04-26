@@ -43,6 +43,10 @@ public class LivreController {
     public livre getBookById(@PathVariable Long id) {
         return bookService.getLivreById(id);
     }
+    @PutMapping("/rendreLivre/{id}")
+    public livre rendreLivre(@PathVariable Long id) {
+        return bookService.RendreLivre(id);
+    }
 
     @PostMapping
     public void createBook(@RequestBody livre book) {

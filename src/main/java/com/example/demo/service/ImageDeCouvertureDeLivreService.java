@@ -5,12 +5,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.Exception.InvalidNameOrExtensionException;
 import com.example.demo.Exception.ProblemWhenSavingBookCoverException;
+import com.example.demo.entity.livre;
+import com.example.demo.repository.LivreRepository;
 import com.example.demo.valueObject.BookCover;
 
 @Service("bookCoverService")

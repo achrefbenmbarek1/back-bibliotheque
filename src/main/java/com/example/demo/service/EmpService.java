@@ -33,9 +33,23 @@ public class EmpService {
         return empRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Book not found"));
     }
     
-    public void saveEmprunt(EmpruntRequest request) {
+    // public void saveEmprunt(EmpruntRequest request) {
+    // 	  livre existingBook = livreRepository.findById(request.getIdLivre())
+    // 	            .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
+    // 	  adherant existingAdherant = adherant_Rep.findById(request.getIdAdherant())
+  	 //            .orElseThrow(() -> new ResourceNotFoundException("Adherant not found"));
+    // 	  emprunt Emprunt = new emprunt();
+    // 	  Emprunt.setAdherent(existingAdherant);
+    // 	  Emprunt.setLivre(existingBook);
+    // 	  Emprunt.setDated(request.getDated());
+    // 	  Emprunt.setDatef(request.getDatef());
+    // 	empRepository.save(Emprunt);
+    // }
+     public void saveEmprunt(EmpruntRequest request) {
     	  livre existingBook = livreRepository.findById(request.getIdLivre())
     	            .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
+    	  if(existingBook.getNbCopie()>0)
+    	  {
     	  adherant existingAdherant = adherant_Rep.findById(request.getIdAdherant())
   	            .orElseThrow(() -> new ResourceNotFoundException("Adherant not found"));
     	  emprunt Emprunt = new emprunt();
@@ -43,9 +57,17 @@ public class EmpService {
     	  Emprunt.setLivre(existingBook);
     	  Emprunt.setDated(request.getDated());
     	  Emprunt.setDatef(request.getDatef());
-    	empRepository.save(Emprunt);
+    	emprunt emprunt = empRepository.save(Emprunt);
+    	if(emprunt!= null) {
+          	existingBook.setNbCopie(existingBook.getNbCopie()-1);
+          	livreRepository.save(existingBook);}
+    	  }
+    	  else
+    	  {
+    		  throw new ResourceNotFoundException("Livre non disponible !");
+    	  }
     }
-    
+   
     public void deleteEmprunt(Long id) {
     	empRepository.deleteById(id);
     }

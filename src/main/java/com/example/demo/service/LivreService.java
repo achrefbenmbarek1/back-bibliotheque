@@ -39,6 +39,13 @@ public class LivreService {
         return livreInstance.getImageDeCouverture();
 
     }
+    public livre RendreLivre(Long id) {
+        livre existingBook = livreRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
+            
+            existingBook.setNbCopie(existingBook.getNbCopie()+1);
+            return livreRepository.save(existingBook);
+        }
 
     public livre updateBook(Long id, livre book) {
         livre existingBook = livreRepository.findById(id)
