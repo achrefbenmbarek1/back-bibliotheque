@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+    tags: [ "v*" ]
+
+env:
+  # REGISTRY: madou-scientistou.duckdns.org
+  IMAGE_NAME: achrefbenmbarek123159/arm
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to Container Registry
+        uses: docker/login-action@v2
+        with:
+          # registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
+      - name: Get Semantic Version
+        id: semver
+        run: |
+          # Get base version from POM
+          BASE_VERSION=$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout | sed 's/-SNAPSHOT//')
+          
+          # Extract major.minor from version (supports 1.0 or 1.0.0 formats)
+          MAJOR_MINOR=$(echo "$BASE_VERSION" | awk -F. '{ printf "%d.%d", $1, $2 }')
+          
+          # Get total number of commits in repository history
+          COMMIT_COUNT=$(git rev-list --count HEAD)
+          
+          # Combine into semantic version
+          SEMVER="backend-$MAJOR_MINOR.$COMMIT_COUNT"
+
+          echo "version=$SEMVER" >> $GITHUB_OUTPUT
+          echo "Generated version: $SEMVER"
+
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/') }}
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.semver.outputs.version }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
