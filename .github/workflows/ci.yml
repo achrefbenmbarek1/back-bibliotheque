@@ -42,7 +42,8 @@ jobs:
           COMMIT_COUNT=$(git rev-list --count HEAD)
           
           # Combine into semantic version
-          SEMVER="backend-$MAJOR_MINOR.$COMMIT_COUNT"
+          # SEMVER="backend-$MAJOR_MINOR.$COMMIT_COUNT"
+          SEMVER="$MAJOR_MINOR.$COMMIT_COUNT"
 
           echo "version=$SEMVER" >> $GITHUB_OUTPUT
           echo "Generated version: $SEMVER"
